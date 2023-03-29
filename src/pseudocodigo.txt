@@ -1,0 +1,49 @@
+impl puede_capturar for pieza{
+    fn puede_capturar(self.posibles_movientos, posicion_oponente) {
+        for posibles_movientos in posibles_movientos{
+            if posibles_moviento == posicion_oponente{
+                return true
+            }
+        }
+        return false
+    }
+}
+
+
+
+fn posibles_movientos(pieza: Pieza) -> vec<Posicion> {
+    let resultado = vec<>;
+    let mov match {
+        Moviento::"diagonal"
+    }
+}
+enum Pieza {
+    Rey(color, posicion),
+
+}
+
+struct Posicion {
+    fila: i8,
+    columna: i8,
+}
+
+
+enum Moviento {
+    Movimiento_diagonal(cant),
+    Movimiento_vertical(cant),
+    Movimiento_horizonatl(cant),
+    Movimiento_l
+}
+
+struct Pieza {
+    color,
+    movimiento: Movimiento(cant_max);
+    posicion
+}
+
+
+struct Tablero {
+    blanca: Pieza(datos),
+    negra: Pieza(datos),
+}
+
