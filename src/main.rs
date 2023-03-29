@@ -6,17 +6,19 @@ use std::process::exit;
 
 
 struct Position{
-    row: u8,
-    column: u8,
+    row: usize,
+    column: usize,
 }
-struct BlackPiece{
-    position: Position(x, y),
+struct Piece{
+    position: Position,
+    typ: char,
+    color: String,
+    posible_moves: Vec<Position>,
 }
 
 struct Chessboard {
-    black: BlackPiece(Position),
-    white: WhitePiece(string),
-
+    black: Piece,
+    white: Piece,
 }
 fn main() {
     let file_name = match read_arguments(env::args().collect()) {
@@ -44,7 +46,34 @@ fn main() {
         println!("{}", error);
         exit(0);
     }
+    create_chessboard(&table);
     println!("MI TABLERO ES VALIDO!!!\n {:?}", table);
+}
+
+
+fn create_chessboard(table: &Vec<Vec<char>>) -> Chessboard{
+    let black_piece: Piece;
+    let white_piece: Piece;
+    
+    for (number_of_row, row) in table.into_iter().enumerate(){
+        for (number_of_column, char) in row.into_iter().enumerate(){
+            match char{
+                '_' => (),
+                'T' | 'A' | 'R' | 'D' | 'C' | 'P' => {
+                    black_piece = Piece {
+                        position: Position { row: (number_of_row), column: (number_of_column) },
+                        typ: *char,
+                        color: "black".to_string(),
+                        posible_moves: get_posible_moves_of(char, position)
+                    }
+                },
+                't' | 'a' | 'r' | 'd' | 'c' | 'p' => (),
+                _ => (),
+            }
+        }
+    }
+    Chessboard { black: (Piece { position: (    Position { row: (), column: () }), typ: (), color: (), posible_moves: () }), white: () }
+    
 }
 
 fn validate_table(table: &Vec<Vec<char>>) -> Option<String> {
