@@ -77,17 +77,14 @@ fn get_one_distance_straight_moves(
 }
 // MOVIMIENTOS EN L
 fn get_vertical_l_moves(possible_moves: &mut Vec<Position>, piece_row: usize, piece_column: usize) {
-    if piece_row - 2 > 0 {
-        // dos para arriba
+    if piece_row as i32 - 2 > 0 {
         if piece_column + 1 < 9 {
-            // uno para la derecha
             possible_moves.push(Position {
                 row: piece_row - 2,
                 column: piece_column + 1,
             });
         }
         if piece_column - 1 > 0 {
-            // uno para la izquierda
             possible_moves.push(Position {
                 row: piece_row - 2,
                 column: piece_column - 1,
@@ -95,16 +92,13 @@ fn get_vertical_l_moves(possible_moves: &mut Vec<Position>, piece_row: usize, pi
         }
     }
     if piece_row + 2 < 9 {
-        // dos para abajo
         if piece_column + 1 < 9 {
-            // uno  a la derecha
             possible_moves.push(Position {
                 row: piece_row + 2,
                 column: piece_column + 1,
             });
         }
         if piece_column - 1 > 0 {
-            // uno a la izquierda
             possible_moves.push(Position {
                 row: piece_row + 2,
                 column: piece_column - 1,
@@ -117,17 +111,14 @@ fn get_horizontal_l_moves(
     piece_row: usize,
     piece_column: usize,
 ) {
-    if piece_column - 2 > 0 {
-        // dos para izquierda
+    if piece_column as i32 - 2 > 0 {
         if piece_row + 1 < 9 {
-            // uno para abajo
             possible_moves.push(Position {
                 row: piece_row + 1,
                 column: piece_column - 2,
             });
         }
         if piece_row - 1 > 0 {
-            // uno para la izquierda
             possible_moves.push(Position {
                 row: piece_row - 1,
                 column: piece_column - 2,
@@ -135,16 +126,13 @@ fn get_horizontal_l_moves(
         }
     }
     if piece_column + 2 < 9 {
-        // dos para derecha
-        if piece_row + 1 < 9 {
-            // uno para abajo
+        if piece_row + 1 < 9{
             possible_moves.push(Position {
                 row: piece_row + 1,
                 column: piece_column + 2,
             });
         }
         if piece_row - 1 > 0 {
-            // uno para arriba
             possible_moves.push(Position {
                 row: piece_row - 1,
                 column: piece_column + 2,
