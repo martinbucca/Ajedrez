@@ -75,7 +75,83 @@ fn get_one_distance_straight_moves(
         });
     }
 }
-
+// MOVIMIENTOS EN L
+fn get_vertical_l_moves(possible_moves: &mut Vec<Position>, piece_row: usize, piece_column: usize) {
+    if piece_row - 2 > 0 {
+        // dos para arriba
+        if piece_column + 1 < 9 {
+            // uno para la derecha
+            possible_moves.push(Position {
+                row: piece_row - 2,
+                column: piece_column + 1,
+            });
+        }
+        if piece_column - 1 > 0 {
+            // uno para la izquierda
+            possible_moves.push(Position {
+                row: piece_row - 2,
+                column: piece_column - 1,
+            });
+        }
+    }
+    if piece_row + 2 < 9 {
+        // dos para abajo
+        if piece_column + 1 < 9 {
+            // uno  a la derecha
+            possible_moves.push(Position {
+                row: piece_row + 2,
+                column: piece_column + 1,
+            });
+        }
+        if piece_column - 1 > 0 {
+            // uno a la izquierda
+            possible_moves.push(Position {
+                row: piece_row + 2,
+                column: piece_column - 1,
+            });
+        }
+    }
+}
+fn get_horizontal_l_moves(
+    possible_moves: &mut Vec<Position>,
+    piece_row: usize,
+    piece_column: usize,
+) {
+    if piece_column - 2 > 0 {
+        // dos para izquierda
+        if piece_row + 1 < 9 {
+            // uno para abajo
+            possible_moves.push(Position {
+                row: piece_row + 1,
+                column: piece_column - 2,
+            });
+        }
+        if piece_row - 1 > 0 {
+            // uno para la izquierda
+            possible_moves.push(Position {
+                row: piece_row - 1,
+                column: piece_column - 2,
+            });
+        }
+    }
+    if piece_column + 2 < 9 {
+        // dos para derecha
+        if piece_row + 1 < 9 {
+            // uno para abajo
+            possible_moves.push(Position {
+                row: piece_row + 1,
+                column: piece_column + 2,
+            });
+        }
+        if piece_row - 1 > 0 {
+            // uno para arriba
+            possible_moves.push(Position {
+                row: piece_row - 1,
+                column: piece_column + 2,
+            });
+        }
+    }
+}
 // MOVIMIENTOS DE DISTANCIA LIBRE
 fn get_straight_moves(possible_moves: &mut Vec<Position>, piece_row: usize, piece_column: usize) {
     for i in 1..=8 {
@@ -96,6 +172,48 @@ fn get_straight_moves(possible_moves: &mut Vec<Position>, piece_row: usize, piec
 fn get_diagonal_moves(possible_moves: &mut Vec<Position>, piece_row: usize, piece_column: usize) {
     get_principal_diagonal_moves(possible_moves, piece_row, piece_column);
     get_secondary_diagonal_moves(possible_moves, piece_row, piece_column);
+}
+fn get_principal_diagonal_moves(
+    possible_moves: &mut Vec<Position>,
+    piece_row: usize,
+    piece_column: usize,
+) {
+    let mut i = piece_row;
+    let mut j = piece_column;
+    // me voy al comienzo de la diagonal principal
+    while i > 1 && j > 1 {
+        i -= 1;
+        j -= 1;
+    }
+    // avanzo hasta el final de la diagonal
+    while i <= 8 && j <= 8 {
+        if i != piece_row && j != piece_row {
+            possible_moves.push(Position { row: i, column: j });
+        }
+        i += 1;
+        j += 1;
+    }
+}
+fn get_secondary_diagonal_moves(
+    possible_moves: &mut Vec<Position>,
+    piece_row: usize,
+    piece_column: usize,
+) {
+    let mut i = piece_row;
+    let mut j = piece_column;
+    // me voy al inicio de la diagonal (hacia la izq superior)
+    while i > 1 && j < 8 {
+        i -= 1;
+        j += 1;
+    }
+    while i <= 8 && j > 0 {
+        // voy bajando por la diagonal
+        if i != piece_row && j != piece_column {
+            possible_moves.push(Position { row: i, column: j });
+        }
+        i += 1;
+        j -= 1;
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -154,41 +272,10 @@ impl PossibleMoves for Torre {
 struct Caballo;
 impl PossibleMoves for Caballo {
     fn possible_moves(&self, position: &Position) -> Vec<Position> {
-        let movimientos: Vec<Position> = vec![
-            Position {
-                row: (position.row as isize - 1) as usize,
-                column: (position.column as isize + 2) as usize,
-            },
-            Position {
-                row: (position.row as isize - 1) as usize,
-                column: (position.column as isize - 2) as usize,
-            },
-            Position {
-                row: (position.row as isize + 1) as usize,
-                column: (position.column as isize + 2) as usize,
-            },
-            Position {
-                row: (position.row as isize + 1) as usize,
-                column: (position.column as isize - 2) as usize,
-            },
-            Position {
-                row: (position.row as isize - 2) as usize,
-                column: (position.column as isize + 1) as usize,
-            },
-            Position {
-                row: (position.row as isize - 2) as usize,
-                column: (position.column as isize - 1) as usize,
-            },
-            Position {
-                row: (position.row as isize + 2) as usize,
-                column: (position.column as isize + 1) as usize,
-            },
-            Position {
-                row: (position.row as isize + 2) as usize,
-                column: (position.column as isize - 1) as usize,
-            },
-        ];
-        movimientos
+        let mut possible_moves: Vec<Position> = vec![];
+        get_horizontal_l_moves(&mut possible_moves, position.row, position.column);
+        get_vertical_l_moves(&mut possible_moves, position.row, position.column);
+        possible_moves
     }
 }
 #[derive(Debug)]
@@ -521,102 +608,4 @@ fn can_capture(possible_moves: Vec<Position>, oponent_position: &Position) -> bo
         }
     }
     false
-}
-
-// MOVIMIENTO DIAGONAL
-
-fn get_principal_diagonal_moves_with_piece_in_central_diagonal(
-    possible_moves: &mut Vec<Position>,
-    piece_row: usize,
-) {
-    // columna = fila, da lo mismo cual elijo y por eso solo se le pasa el numero de fila
-    let piece_row_and_column = piece_row;
-    for i in 1..=8 {
-        if i != piece_row_and_column {
-            possible_moves.push(Position { row: i, column: i });
-        }
-    }
-}
-fn get_principal_diagonal_moves_with_piece_in_superior_diagonal(
-    possible_moves: &mut Vec<Position>,
-    piece_row: usize,
-    piece_column: usize,
-) {
-    // la fila donde empieza la diagonal va a ser siempre 1
-    let mut i = 1;
-    // la columna de comienzo se puede calcular de esta forma: columna_de_pieza - distancia_entre_fila_1_y_fila_pieza
-    let mut j = piece_column - (piece_row - 1);
-    while j <= 8 {
-        if i != piece_row && j != piece_column {
-            possible_moves.push(Position { row: i, column: j });
-        }
-        i += 1;
-        j += 1;
-    }
-}
-fn get_principal_diagonal_moves_with_piece_in_inferior_diagonal(
-    possible_moves: &mut Vec<Position>,
-    piece_row: usize,
-    piece_column: usize,
-) {
-    // la fila donde empieza la diagonal siempre va a ser 1
-    let mut j = 1;
-    // la fila de comienzo se puede calcular de esta forma: fila_de_pieza - distancia_entre_columna_1_y_columna_pieza
-    let mut i = piece_row - (piece_column - 1);
-    while i <= 8 {
-        if i != piece_row && j != piece_column {
-            possible_moves.push(Position { row: i, column: j });
-        }
-        (i, j) = (i + 1, j + 1);
-    }
-}
-
-fn get_principal_diagonal_moves(
-    possible_moves: &mut Vec<Position>,
-    piece_row: usize,
-    piece_column: usize,
-) {
-    // si la pieza esta sobre la diagonal central
-    if piece_row == piece_column {
-        // las filas y columnas van a ser igales por estar en la diagonal central!
-        get_principal_diagonal_moves_with_piece_in_central_diagonal(possible_moves, piece_row);
-    }
-    // si la pieza esta por arriba de la diagonal central
-    if piece_column > piece_row {
-        get_principal_diagonal_moves_with_piece_in_superior_diagonal(
-            possible_moves,
-            piece_row,
-            piece_column,
-        );
-    }
-    // si la pieza esta por debajo de la diagonal central
-    if piece_row > piece_column {
-        get_principal_diagonal_moves_with_piece_in_inferior_diagonal(
-            possible_moves,
-            piece_row,
-            piece_column,
-        );
-    }
-}
-
-fn get_secondary_diagonal_moves(
-    possible_moves: &mut Vec<Position>,
-    piece_row: usize,
-    piece_column: usize,
-) {
-    let mut i = piece_row;
-    let mut j = piece_column;
-    // me voy al inicio de la diagonal (hacia la izq superior)
-    while i > 0 && j < 8 {
-        i -= 1;
-        j += 1;
-    }
-    while i < 8 && j > 0 {
-        // voy bajando por la diagonal
-        if i != piece_row && j != piece_column {
-            possible_moves.push(Position { row: i, column: j });
-            i += 1;
-            j -= 1;    
-        }
-    }
 }
