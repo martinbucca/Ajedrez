@@ -4,6 +4,7 @@ use crate::{
     rey::Rey, torre::Torre,
 };
 use crate::{position::Position, tablero_ajedrez::Chessboard};
+
 use std::fs::File;
 use std::io::Error;
 use std::io::{BufRead, BufReader};
@@ -278,3 +279,13 @@ fn can_capture(possible_moves: Vec<Position>, oponent_position: &Position) -> bo
     }
     false
 }
+
+/*
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn error_al_pasar_cantidad_de_parametros_incorrectos_al_programa() {
+
+    }
+}*/

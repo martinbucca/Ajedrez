@@ -16,3 +16,45 @@ impl PossibleMoves for PeonNegro {
         possible_moves
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn peon_negro_se_mueve_correctamente() {
+        let peon = PeonNegro;
+        let posicion_peon = Position { row: 2, column: 4 };
+        let posibles_movimientos = peon.possible_moves(&posicion_peon);
+        let movimientos_esperados = vec![
+            Position { row: 3, column: 5 },
+            Position { row: 3, column: 3 },
+        ];
+        for movimiento in movimientos_esperados {
+            assert!(posibles_movimientos.contains(&movimiento));
+        }
+    }
+    #[test]
+    fn peon_negro_se_mueve_correctamente_estando_en_borde_derecho() {
+        let peon = PeonNegro;
+        let posicion_peon = Position { row: 2, column: 1 };
+        let posibles_movimientos = peon.possible_moves(&posicion_peon);
+        let movimientos_esperados = vec![Position { row: 3, column: 2 }];
+        assert_eq!(posibles_movimientos, movimientos_esperados);
+    }
+    #[test]
+    fn peon_negro_se_mueve_correctamente_estando_en_borde_izquierdo() {
+        let peon = PeonNegro;
+        let posicion_peon = Position { row: 2, column: 8 };
+        let posibles_movimientos = peon.possible_moves(&posicion_peon);
+        let movimientos_esperados = vec![Position { row: 3, column: 7 }];
+        assert_eq!(posibles_movimientos, movimientos_esperados);
+    }
+    #[test]
+    fn peon_negro_no_tiene_movimientos_estando_en_extremo_opuesto() {
+        let peon = PeonNegro;
+        let posicion_peon = Position { row: 8, column: 4 };
+        let posibles_movimientos = peon.possible_moves(&posicion_peon);
+        let movimientos_esperados = vec![];
+        assert_eq!(posibles_movimientos, movimientos_esperados);
+    }
+}

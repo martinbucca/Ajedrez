@@ -5,7 +5,6 @@ pub mod logica;
 pub mod movimientos;
 pub mod peon_blanco;
 pub mod peon_negro;
-pub mod pieza;
 pub mod position;
 pub mod rey;
 pub mod tablero_ajedrez;

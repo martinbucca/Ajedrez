@@ -1,4 +1,5 @@
+#[derive(Debug, PartialEq)]
 pub struct Position {
-    row: usize,
-    column: usize,
+    pub row: usize,
+    pub column: usize,
 }

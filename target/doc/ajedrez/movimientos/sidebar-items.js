@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["get_diagonal_moves",""],["get_horizontal_l_moves",""],["get_one_distance_downwards_diagonal_moves",""],["get_one_distance_straight_moves",""],["get_one_distance_upwards_diagonal_moves",""],["get_straight_moves",""],["get_vertical_l_moves",""]],"trait":[["PossibleMoves",""]]};

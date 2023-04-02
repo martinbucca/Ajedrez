@@ -196,7 +196,7 @@ fn get_principal_diagonal_moves(
     }
     // avanzo hasta el final de la diagonal
     while i <= 8 && j <= 8 {
-        if i != piece_row && j != piece_row {
+        if i != piece_row && j != piece_column {
             possible_moves.push(Position { row: i, column: j });
         }
         i += 1;
