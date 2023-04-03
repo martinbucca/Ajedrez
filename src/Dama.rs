@@ -2,8 +2,13 @@ use crate::{
     movimientos::{get_diagonal_moves, get_straight_moves, PossibleMoves},
     position::Position,
 };
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
+/// Representa la pieza Dama/Reina del ajedrez.
 pub struct Dama;
+/// Recibe una pieza Dama (struct Dama) y su posicion (&struct Position) y devuelve un vector de
+/// struct Position donde cada elemento es una posicion dentro del tablero a la que se puede mover la Dama.
+/// La Dama puede moverse en cualquier dirección (vertical, horizontal y diagonal),
+/// avanzando tantas casillas como se desee.
 impl PossibleMoves for Dama {
     fn possible_moves(&self, position: &Position) -> Vec<Position> {
         let mut possible_moves = vec![];

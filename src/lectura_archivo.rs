@@ -65,36 +65,43 @@ mod tests {
         assert_eq!(Some("table.txt".to_string()), read_arguments(argumentos))
     }
     #[test]
+    fn open_file_devuelve_ok_con_el_archivo_si_se_pudo_abrir_correctamente() {
+        let nombre = "./table.txt".to_string();
+        let file = File::open(nombre);
+        match file {
+            Ok(..) => assert!(file.is_ok()),
+            Err(..) => (),
+        }
+    }
+    #[test]
     fn open_file_devuelve_error_si_el_archivo_no_existe() {
         let archivo = "archivo_inexistente.txt".to_string();
         let resultado = open_file(archivo);
         assert!(resultado.is_err())
     }
-    /*
-    #[test]
-    fn open_file_devuelve_ok_con_el_archivo_si_se_pudo_abrir_correctamente() {
-        let nombre = "table.txt".to_string();
-        let file = File::open(nombre);
-        match file{
-            Ok(..) => assert!(file.is_ok()),
-            Err(e)=> panic!("{}", e),
-        }
-    }*/
     #[test]
     fn get_row_elimina_los_espacios_y_devuelve_vector_de_caracteres_correctamente() {
         let linea = "_ _ _ _ _ _ _ T".to_string();
         let fila_esperada = vec!['_', '_', '_', '_', '_', '_', '_', 'T'];
         assert_eq!(fila_esperada, get_row(linea))
     }
-    /*
     #[test]
     fn create_table_devuelve_una_tabla_con_archivo_valido() {
-        let archivo = open_file("../table.txt".to_string());
+        let archivo = open_file("./table.txt".to_string());
         let tabla = create_table(archivo.unwrap());
-        let tabla_esperada = vec![vec!['_', '_', '_', '_', '_', '_', '_', '_',], vec!['_', '_', '_', '_', '_', '_', '_', '_',]];
-        match tabla{
+        let tabla_esperada = vec![
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['A', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', 'p', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+        ];
+        match tabla {
             Ok(t) => assert_eq!(t, tabla_esperada),
             _ => (),
         }
-    }*/
+    }
 }

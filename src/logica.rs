@@ -287,29 +287,41 @@ mod tests {
     #[test]
     fn can_capture_devuelve_resultado_correcto_1() {
         let pieza = Piece::Torre(Torre);
-        let posicion_pieza = Position{row: 3, column: 5};
-        let posicion_oponente = Position{row: 5, column: 5};
-        assert_eq!(true, can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente))
+        let posicion_pieza = Position { row: 3, column: 5 };
+        let posicion_oponente = Position { row: 5, column: 5 };
+        assert_eq!(
+            true,
+            can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente)
+        )
     }
     #[test]
     fn can_capture_devuelve_resultado_correcto_2() {
         let pieza = Piece::Torre(Torre);
-        let posicion_pieza = Position{row: 5, column: 5};
-        let posicion_oponente = Position{row: 3, column: 5};
-        assert_eq!(true, can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente))
+        let posicion_pieza = Position { row: 5, column: 5 };
+        let posicion_oponente = Position { row: 3, column: 5 };
+        assert_eq!(
+            true,
+            can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente)
+        )
     }
     #[test]
     fn can_capture_devuelve_resultado_correcto_3() {
         let pieza = Piece::Dama(Dama);
-        let posicion_pieza = Position{row: 3, column: 5};
-        let posicion_oponente = Position{row: 6, column: 8};
-        assert_eq!(true, can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente))
+        let posicion_pieza = Position { row: 3, column: 5 };
+        let posicion_oponente = Position { row: 6, column: 8 };
+        assert_eq!(
+            true,
+            can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente)
+        )
     }
     #[test]
     fn can_capture_devuelve_resultado_correcto_4() {
         let pieza = Piece::Dama(Dama);
-        let posicion_pieza = Position{row: 3, column: 5};
-        let posicion_oponente = Position{row: 4, column: 7};
-        assert_eq!(false, can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente))
+        let posicion_pieza = Position { row: 3, column: 5 };
+        let posicion_oponente = Position { row: 4, column: 7 };
+        assert_eq!(
+            false,
+            can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente)
+        )
     }
 }

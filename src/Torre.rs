@@ -2,8 +2,12 @@ use crate::{
     movimientos::{get_straight_moves, PossibleMoves},
     position::Position,
 };
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
+/// Representa la pieza Torre del ajedrez
 pub struct Torre;
+/// Recibe una pieza Torre (struct Torre) y su posicion (&struct Position) y devuelve un vector de
+/// struct Position donde cada elemento es una posicion dentro del tablero a la que se puede mover la Torre.
+/// La Torre puede moverse en direcciones verticales y horizontales, avanzando tantas casillas como se desee.
 impl PossibleMoves for Torre {
     fn possible_moves(&self, position: &Position) -> Vec<Position> {
         let mut possible_moves = vec![];

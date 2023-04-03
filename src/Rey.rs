@@ -5,8 +5,12 @@ use crate::{
     },
     position::Position,
 };
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
+/// Representa la pieza Rey del ajedrez.
 pub struct Rey;
+/// Recibe una pieza Rey (struct Rey) y su posicion (&struct Position) y devuelve un vector de
+/// struct Position donde cada elemento es una posicion dentro del tablero a la que se puede mover el Rey.
+/// El Rey puede moverse en cualquier dirección (vertical, horizontal y diagonal), avanzando siempre una casilla.
 impl PossibleMoves for Rey {
     fn possible_moves(&self, position: &Position) -> Vec<Position> {
         let mut possible_moves = vec![];

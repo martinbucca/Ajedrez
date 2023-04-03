@@ -2,8 +2,13 @@ use crate::{
     movimientos::{get_horizontal_l_moves, get_vertical_l_moves, PossibleMoves},
     position::Position,
 };
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
+/// Representa la pieza Caballo del ajedrez.
 pub struct Caballo;
+/// Recibe una pieza Caballo (struct Caballo) y su posicion (&struct Position) y devuelve un vector de
+/// struct Position donde cada elemento es una posicion dentro del tablero a la que se puede mover el Caballo.
+/// El Caballo solo puede moverse avanzando dos casillas en vertical y una horizontal, o viceversa
+/// (simplificando, se mueve en patron de L), siendo capaz de saltar por encima de otras piezas.
 impl PossibleMoves for Caballo {
     fn possible_moves(&self, position: &Position) -> Vec<Position> {
         let mut possible_moves: Vec<Position> = vec![];

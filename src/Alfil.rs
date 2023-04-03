@@ -2,12 +2,12 @@ use crate::{
     movimientos::{get_diagonal_moves, PossibleMoves},
     position::Position,
 };
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 
-/// Representa la pieza alfil del ajedrez
+/// Representa la pieza Alfil del ajedrez.
 pub struct Alfil;
 /// Recibe una pieza alfil (struct Alfil) y su posicion (&struct Position) y devuelve un vector de
-/// struct Position donde cada elemento es una posicion a la que se puede mover el alfil
+/// struct Position donde cada elemento es una posicion dentro del tablero a la que se puede mover el Alfil.
 /// El alfil solo puede moverse en direcciones diagonales, avanzando tantas casillas como desee.
 impl PossibleMoves for Alfil {
     fn possible_moves(&self, position: &Position) -> Vec<Position> {
