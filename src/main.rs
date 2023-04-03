@@ -1,9 +1,12 @@
-use ajedrez::logica::{
-    create_chessboard, create_table, generate_result, open_file, read_arguments, validate_table,
-};
+use ajedrez::lectura_archivo::{create_table, open_file, read_arguments};
+use ajedrez::logica::{create_chessboard, generate_result};
+use ajedrez::validacion::validate_table;
 use std::env;
 use std::process::exit;
 
+/// Es la funcion principal del porgrama que se encarga de llamar a todas las funciones que contienen la logica del
+/// programa y en caso de que alguna parte del programa devuelva ERROR se encarga de mostrarle por pantalla
+/// y cortar la ejecucion del programa.
 fn main() {
     let file_name = match read_arguments(env::args().collect()) {
         None => {
@@ -31,5 +34,5 @@ fn main() {
         exit(-1)
     }
     let chessboard = create_chessboard(&table);
-    generate_result(chessboard);
+    println!("{}", generate_result(chessboard));
 }

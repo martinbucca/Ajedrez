@@ -5,12 +5,11 @@ use crate::{
 };
 use crate::{position::Position, tablero_ajedrez::Chessboard};
 
-use std::fs::File;
-use std::io::Error;
-use std::io::{BufRead, BufReader};
-use std::vec;
-
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
+/// Tiene enumeradas todas las posibles piezas que un tablero puede tener y dentro de cada pieza
+/// una tupla simple que tiene un struct de la pieza correspondiente.
+/// Tambien tiene la opcion de None para que pueda ser inicializada una pieza que todavia no sé cual es
+/// pero que sé que existe.
 pub enum Piece {
     Alfil(Alfil),
     Torre(Torre),
@@ -23,7 +22,11 @@ pub enum Piece {
 }
 
 //GENERACION DEL RESULTADO
-pub fn generate_result(chessboard: Chessboard) {
+
+/// Recibe un struct Chessboard que tiene la informacion justa y necesaria para que se pueda
+/// generar el resultado del programa y guarda el resultado de si la pieza negra puede capturar
+/// y si la pieza blanca puede capturar y llama a una funcion que decide el resultado.
+pub fn generate_result(chessboard: Chessboard) -> String {
     let black_can_capture = can_capture_oponent(
         &chessboard.black,
         &chessboard.black_position,
@@ -34,121 +37,30 @@ pub fn generate_result(chessboard: Chessboard) {
         &chessboard.white_position,
         &chessboard.black_position,
     );
-    print_result(black_can_capture, white_can_capture);
+    get_result(black_can_capture, white_can_capture)
 }
-fn print_result(black_can_capture: bool, white_can_capture: bool) {
+
+/// Recibe dos valores true/false que representan si las piezas pueden capturar a la otra o no
+/// y devuelve un String resultado siendo "B" si solo capturan las blancas, "N" si solo capturan las negras,
+/// "E" si capturan las dos y "P" si no captura ninguna.
+fn get_result(black_can_capture: bool, white_can_capture: bool) -> String {
     let result = (black_can_capture, white_can_capture);
     match result {
-        (false, true) => println!("B"),
-        (true, false) => println!("N"),
-        (true, true) => println!("E"),
-        (false, false) => println!("P"),
+        (false, true) => "B".to_string(),
+        (true, false) => "N".to_string(),
+        (true, true) => "E".to_string(),
+        (false, false) => "P".to_string(),
     }
-}
-
-//ARGUMENTOS, ARCHIVOS Y TABLA
-pub fn read_arguments(mut arguments: Vec<String>) -> Option<String> {
-    // 2 arguments must be passed!
-    if arguments.len() != 2 {
-        None
-    } else {
-        let file_name = arguments.pop()?;
-        Some(file_name)
-    }
-}
-pub fn open_file(file_name: String) -> Result<File, Error> {
-    let file = File::open(file_name)?;
-    Ok(file)
-}
-fn get_row(content: String) -> Vec<char> {
-    let mut row: Vec<char> = vec![];
-    for c in content.chars() {
-        if c != ' ' {
-            row.push(c);
-        }
-    }
-    row
-}
-pub fn create_table(file: File) -> Result<Vec<Vec<char>>, Error> {
-    let mut table: Vec<Vec<char>> = vec![];
-    let reader = BufReader::new(file);
-    for line in reader.lines() {
-        let content = line?;
-        let row = get_row(content);
-        table.push(row);
-    }
-    Ok(table)
-}
-
-//VALIDACION DE TABLA
-pub fn validate_table(table: &Vec<Vec<char>>) -> Result<(), Error> {
-    validate_table_dimensions(&table)?;
-    let (mut black_pieces, mut white_pieces) = (0, 0);
-    for row in table {
-        for position in row {
-            match position {
-                'T' | 'A' | 'R' | 'D' | 'C' | 'P' => {
-                    black_pieces += 1;
-                    if black_pieces > 1 {
-                        return Err(Error::new(
-                            std::io::ErrorKind::Other,
-                            "ERROR: No puede haber mas de una pieza negra en el tablero!",
-                        ));
-                    }
-                }
-                't' | 'a' | 'r' | 'd' | 'c' | 'p' => {
-                    white_pieces += 1;
-                    if white_pieces > 1 {
-                        return Err(Error::new(
-                            std::io::ErrorKind::Other,
-                            "ERROR: No puede haber mas de una pieza blanca en el tablero!",
-                        ));
-                    }
-                }
-                '_' => (),
-                _ => {
-                    return Err(Error::new(
-                        std::io::ErrorKind::Other,
-                        "Error: Pieza invalida o caracter no aceptado en el tablero!",
-                    ));
-                }
-            };
-        }
-    }
-    validate_one_piece_per_color(black_pieces, white_pieces)?;
-    Ok(())
-}
-fn validate_one_piece_per_color(black_pieces: i32, white_pieces: i32) -> Result<(), Error> {
-    if black_pieces == 0 || white_pieces == 0 {
-        return Err(Error::new(
-            std::io::ErrorKind::Other,
-            "ERROR: Debe haber una pieza negra y una pieza blanca en el tablero!",
-        ));
-    }
-    Ok(())
-}
-fn validate_table_dimensions(table: &&Vec<Vec<char>>) -> Result<(), Error> {
-    if table.len() != 8 {
-        return Err(Error::new(
-            std::io::ErrorKind::Other,
-            "ERROR: El tablero no es valido. Debe tener 8 filas!",
-        ));
-    }
-    for row in *table {
-        if row.len() != 8 {
-            return Err(Error::new(
-                std::io::ErrorKind::Other,
-                "ERROR: El tablero no es valido, debe tener 8 columnas!",
-            ));
-        }
-    }
-    Ok(())
 }
 
 // CREACION DEL TABLERO DE AJEDREZ VALIDO
+
+/// Recibe un tablero valido y devuelve una tupla donde en la primer
+/// posicion esta la pieza negra y en la segunda su posicion.
 fn get_black_piece_and_position(table: &&[Vec<char>]) -> (Piece, Position) {
-    //inicilaizo las dos variables para poder guardarles un valor en el for
-    // ya fue validada por lo que estoy seguro que las variables "black" y "black position" van a
+    // inicilaizo las variable "black" y "black_position" con una pieza None y una posicion en (0,0) para poder
+    // guardarles un valor en el for.
+    // ya fue validada por lo que estoy seguro que las variables "black" y "black_position" van a
     // ser asignadas a su valor correcto
     let mut black: Piece = Piece::None;
     let mut black_position = Position { row: 0, column: 0 };
@@ -191,9 +103,13 @@ fn get_black_piece_and_position(table: &&[Vec<char>]) -> (Piece, Position) {
     }
     (black, black_position)
 }
+
+/// Recibe un tablero valido y devuelve una tupla donde en la primer
+/// posicion esta la pieza blanca y en la segunda su posicion.
 fn get_white_piece_and_position(table: &&[Vec<char>]) -> (Piece, Position) {
-    //inicilaizo las dos variables para poder guardarles un valor en el for
-    // ya fue validada por lo que estoy seguro que las variables "black" y "black position" van a
+    // inicilaizo las variable "white" y "white_position" con una pieza None y una posicion en (0,0) para poder
+    // guardarles un valor en el for.
+    // ya fue validada por lo que estoy seguro que las variables "white" y "white_position" van a
     // ser asignadas a su valor correcto
     let mut white: Piece = Piece::None;
     let mut white_position = Position { row: 0, column: 0 };
@@ -236,6 +152,10 @@ fn get_white_piece_and_position(table: &&[Vec<char>]) -> (Piece, Position) {
     }
     (white, white_position)
 }
+
+/// Recibe una vector de vectores de Char que representa un tablero de ajedrez valido
+/// y devuelve un struct Chessboard con los datos necesarios para generar el resultado
+/// del programa.
 pub fn create_chessboard(table: &[Vec<char>]) -> Chessboard {
     let (black, black_position) = get_black_piece_and_position(&table);
     let (white, white_position) = get_white_piece_and_position(&table);
@@ -248,6 +168,9 @@ pub fn create_chessboard(table: &[Vec<char>]) -> Chessboard {
 }
 
 // CAPTURA
+
+/// Recibe una pieza, su posicion y la posicion de la pieza oponente y devuelve true en caso de que la
+/// pieza que recibio pueda capturar a la oponente o false en caso contario.
 pub fn can_capture_oponent(
     piece: &Piece,
     piece_position: &Position,
@@ -271,6 +194,10 @@ pub fn can_capture_oponent(
         _ => false,
     }
 }
+
+/// Recibe un vector de posiciones, que representa todos los posibles movimientos que tiene la pieza,
+/// y la posicion de la pieza oponente y devuelve true si alguna de las posiciones del
+/// vector es igual a la posicion del oponente o false en caso contrario.
 fn can_capture(possible_moves: Vec<Position>, oponent_position: &Position) -> bool {
     for chess_box in possible_moves {
         if chess_box == *oponent_position {
@@ -280,12 +207,109 @@ fn can_capture(possible_moves: Vec<Position>, oponent_position: &Position) -> bo
     false
 }
 
-/*
 #[cfg(test)]
 mod tests {
     use super::*;
     #[test]
-    fn error_al_pasar_cantidad_de_parametros_incorrectos_al_programa() {
-
+    fn se_genera_el_resultado_correctamente_de_empate() {
+        let tablero = Chessboard {
+            black: Piece::Torre(Torre),
+            white: Piece::Torre(Torre),
+            black_position: Position { row: 8, column: 8 },
+            white_position: Position { row: 1, column: 8 },
+        };
+        assert_eq!("E", generate_result(tablero));
     }
-}*/
+    #[test]
+    fn se_genera_el_resultado_correctamente_de_ganan_blancas() {
+        let tablero = Chessboard {
+            black: Piece::PeonNegro(PeonNegro),
+            white: Piece::Torre(Torre),
+            black_position: Position { row: 8, column: 8 },
+            white_position: Position { row: 1, column: 8 },
+        };
+        assert_eq!("B", generate_result(tablero));
+    }
+    #[test]
+    fn se_genera_el_resultado_correctamente_de_ganan_negras() {
+        let tablero = Chessboard {
+            black: Piece::Torre(Torre),
+            white: Piece::Alfil(Alfil),
+            black_position: Position { row: 1, column: 8 },
+            white_position: Position { row: 7, column: 8 },
+        };
+        assert_eq!("N", generate_result(tablero));
+    }
+    #[test]
+    fn se_genera_el_resultado_correctamente_de_no_gana_ninguna() {
+        let tablero = Chessboard {
+            black: Piece::Torre(Torre),
+            white: Piece::Alfil(Alfil),
+            black_position: Position { row: 1, column: 7 },
+            white_position: Position { row: 7, column: 8 },
+        };
+        assert_eq!("P", generate_result(tablero));
+    }
+    #[test]
+    fn get_result_devuelve_la_letra_correcta_si_ambos_capturan() {
+        assert_eq!("E", get_result(true, true))
+    }
+    #[test]
+    fn get_result_devuelve_la_letra_correcta_si_blanco_captura() {
+        assert_eq!("B", get_result(false, true))
+    }
+    #[test]
+    fn get_result_devuelve_la_letra_correcta_si_negro_captura() {
+        assert_eq!("N", get_result(true, false))
+    }
+    #[test]
+    fn get_result_devuelve_la_letra_correcta_si_ninguno_captura() {
+        assert_eq!("P", get_result(false, false))
+    }
+    #[test]
+    fn se_crea_correctamente_el_tablero_con_tabla_valida() {
+        let table = vec![
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', 'T', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', 'p', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+            vec!['_', '_', '_', '_', '_', '_', '_', '_'],
+        ];
+        let tablero = create_chessboard(&table);
+        assert_eq!(Piece::Torre(Torre), tablero.black);
+        assert_eq!(Piece::PeonBlanco(PeonBlanco), tablero.white);
+        assert_eq!(Position { row: 3, column: 5 }, tablero.black_position);
+        assert_eq!(Position { row: 5, column: 5 }, tablero.white_position);
+    }
+    #[test]
+    fn can_capture_devuelve_resultado_correcto_1() {
+        let pieza = Piece::Torre(Torre);
+        let posicion_pieza = Position{row: 3, column: 5};
+        let posicion_oponente = Position{row: 5, column: 5};
+        assert_eq!(true, can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente))
+    }
+    #[test]
+    fn can_capture_devuelve_resultado_correcto_2() {
+        let pieza = Piece::Torre(Torre);
+        let posicion_pieza = Position{row: 5, column: 5};
+        let posicion_oponente = Position{row: 3, column: 5};
+        assert_eq!(true, can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente))
+    }
+    #[test]
+    fn can_capture_devuelve_resultado_correcto_3() {
+        let pieza = Piece::Dama(Dama);
+        let posicion_pieza = Position{row: 3, column: 5};
+        let posicion_oponente = Position{row: 6, column: 8};
+        assert_eq!(true, can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente))
+    }
+    #[test]
+    fn can_capture_devuelve_resultado_correcto_4() {
+        let pieza = Piece::Dama(Dama);
+        let posicion_pieza = Position{row: 3, column: 5};
+        let posicion_oponente = Position{row: 4, column: 7};
+        assert_eq!(false, can_capture_oponent(&pieza, &posicion_pieza, &posicion_oponente))
+    }
+}

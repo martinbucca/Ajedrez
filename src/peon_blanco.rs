@@ -2,8 +2,14 @@ use crate::{
     movimientos::{get_one_distance_upwards_diagonal_moves, PossibleMoves},
     position::Position,
 };
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
+/// Representa la pieza Peon Blanco del ajedrez.
 pub struct PeonBlanco;
+/// Recibe una pieza PeonBlanco (struct PeonBlanco) y su posicion (&struct Position) y devuelve un vector de
+/// struct Position donde cada elemento es una posicion dentro del tablero a la que se puede mover el PeonBlanco.
+/// Por disposicion del tablero los PeonesBlancos siempre capturan hacia arriba  y solo pueden capturar piezas
+/// que se encuentren a una casilla de distancia en direccion diagonal (hacia adelante). Siempre el vector que devuelve
+/// tendra como maximo 2 Posiciones.
 impl PossibleMoves for PeonBlanco {
     fn possible_moves(&self, position: &Position) -> Vec<Position> {
         let mut possible_moves = vec![];
