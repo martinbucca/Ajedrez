@@ -1,4 +1,10 @@
-#                                                      AJEDREZ
+<div align="center">
+  <p align="center">
+    <h1> AJEDREZ <h1 />
+  </p>
+  <img src="chessboard.png" alt="Logo" width="80" height="80">
+</div>
+
 ## Consigna
 Dada la posicion de dos piezas (una negra y una blanca), y solo dos piezas, determinar si:
 
