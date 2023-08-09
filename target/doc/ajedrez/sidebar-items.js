@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":[["alfil",""],["caballo",""],["dama",""],["logica",""],["movimientos",""],["peon_blanco",""],["peon_negro",""],["position",""],["rey",""],["tablero_ajedrez",""],["torre",""]]};

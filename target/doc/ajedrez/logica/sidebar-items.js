@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["Piece",""]],"fn":[["can_capture_oponent",""],["create_chessboard",""],["create_table",""],["generate_result",""],["open_file",""],["read_arguments",""],["validate_table",""]]};
